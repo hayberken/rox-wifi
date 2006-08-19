@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<AppInfo>
+  <Summary>WiFi monitor</Summary>
+  <About>
+    <Purpose>Wireless network quality monitor</Purpose>
+    <Version>002</Version>
+    <Author>Cyrille Mars</Author>
+    <License>GNU General Public License</License>
+    <Homepage>http://www.m4rs.org/</Homepage>
+  </About>
+</AppInfo>

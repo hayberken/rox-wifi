@@ -1,0 +1,19 @@
+WiFi
+====
+
+002
+-----
+It seems that Cyrille is not supporting this anymore (it is missing from his site)
+So, I put this release together. (Ken Hayber)
+
+* Fixed menu positioning
+* Added translation support for strings
+* Added Tango and (feeling silly) Emotes themes (from NetworkManager and Tango projects)
+* Updated to latest findrox.py
+* Changed AppRun to inform use that this is an Applet and show Options
+
+
+001
+-----
+
+First Release
