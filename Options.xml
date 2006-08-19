@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<options>
+  <section>
+    <menu name="THEME" label="Theme">
+      <item value="Simple"  label="Simple"/>
+      <item value="Antenna" label="Antenna"/>
+      <item value="WiFi"    label="WiFi"/>
+      <item value="tgauge"  label="TGauge"/>
+      <item value='Apple' label='Apple'/>
+      <item value='Tango' label='Tango'/>
+      <item value='Emotes' label='Emotes'/>
+    </menu>
+    <entry name="INTERFACE" label="Interface:"/>
+    <entry name="REFRESH"   label="Refresh time:"/>
+  </section>
+</options>
