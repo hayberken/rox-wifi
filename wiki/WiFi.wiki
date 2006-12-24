@@ -14,7 +14,7 @@ Additionally, it shows more detailed statistics in a tooltip.  Currently it has 
 The applet is entirely written in python using gtk.
 
 = To Do ==
-* Show IP Address and other details in the tooltip
-* Allow the user to modify wireless settings.
-* Make this a ROX front-end to NetworkManager???
+ * Show IP Address and other details in the tooltip
+ * Allow the user to modify wireless settings.
+ * Make this a ROX front-end to NetworkManager???
 
