@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 import findrox; findrox.version(2,0,0)
-import rox, os
-from rox import applet, g, app_options, basedir
+import rox, os, gtk, gobject
+from rox import applet, app_options, basedir
 from rox.Menu import Menu, set_save_name
 from rox.options import Option
-
 
 APP_NAME = "Wifi"
 APP_DIR = rox.app_dir
@@ -19,13 +18,19 @@ set_save_name(APP_NAME, site=APP_DOMAIN)
 
 
 
-menu=Menu('main',[(_('/Options'),'show_options', '<StockItem>', '', g.STOCK_PREFERENCES),
-				  (_('/Refresh'), 'update', '<StockItem>', '', g.STOCK_REFRESH),
-				  (_('/Quit'), 'quit', '<StockItem>', '', g.STOCK_QUIT) ])
+menu=Menu('main',[(_('/Options'),'show_options', '<StockItem>', '', gtk.STOCK_PREFERENCES),
+				  (_('/Refresh'), 'update', '<StockItem>', '', gtk.STOCK_REFRESH),
+				  (_('/Start'), 'start_net', '<StockItem>', '', gtk.STOCK_CONNECT),
+				  (_('/Stop'), 'stop_net', '<StockItem>', '', gtk.STOCK_DISCONNECT),
+				  (_('/Quit'), 'quit', '<StockItem>', '', gtk.STOCK_QUIT) ])
 
 REFRESH   = Option('REFRESH', '2')
 THEME	 = Option('THEME', 'Simple')
 INTERFACE = Option('INTERFACE', 'eth1')
+COMMAND = Option('COMMAND', 'gksudo wifi-radar')
+NETSTART = Option('NETSTART', '')
+NETSTOP = Option('NETSTOP', '')
+
 rox.app_options.notify()
 
 wirelessStruct = ('interface',
@@ -48,24 +53,25 @@ class Wifi(applet.Applet):
 		self.interface = INTERFACE.value
 		self.refresh   = REFRESH.int_value
 		
-		self.timeout = g.timeout_add(int(self.refresh)*1000, self.update)
+		self.timeout = gobject.timeout_add(int(self.refresh)*1000, self.update)
 		def destroyed(self):
-			g.timeout_remove(self.timeout)
+			gobject.source_remove(self.timeout)
 
 		self.connect('button-press-event', self.button_press)
 		self.lImgs = []
 		self.getImg()
-		self.hbox  = g.HBox()
+		self.hbox  = gtk.HBox()
 		for hImg in self.lImgs:
 			self.hbox.add(hImg['image'])
 		
-		self.tooltip = g.Tooltips()
+		self.tooltip = gtk.Tooltips()
 		self.hbox.set_border_width(0)
 		self.add(self.hbox)
-		self.add_events(g.gdk.BUTTON_PRESS_MASK)
+		self.add_events(gtk.gdk.BUTTON_PRESS_MASK)
 		self.connect('size-allocate', self.event_callback)
 		rox.app_options.add_notify(self.options_changed)
 		self.show_all()
+		gtk.gdk.flush()
 		self.update()
 
 	def getImg(self):
@@ -84,8 +90,8 @@ class Wifi(applet.Applet):
 			imgDict['low'] = low
 			imgDict['high'] = high
 			imgDict['fileName'] = os.path.join(themeDir, filename)
-			imgDict['pixbuf'] = g.gdk.pixbuf_new_from_file(os.path.join(themeDir, filename))
-			imgDict['image'] = g.Image()
+			imgDict['pixbuf'] = gtk.gdk.pixbuf_new_from_file(os.path.join(themeDir, filename))
+			imgDict['image'] = gtk.Image()
 			self.lImgs.append(imgDict)
 		f.close()
 		
@@ -131,20 +137,28 @@ class Wifi(applet.Applet):
 					hImg['image'].show()
 				else:
 					hImg['image'].hide()
-		return g.TRUE
+		return True
+
+	def start_net(self, *args):
+		import commands
+		commands.getstatusoutput(NETSTART.value)
+
+	def stop_net(self, *args):
+		import commands
+		commands.getstatusoutput(NETSTOP.value)
 	
 	def event_callback(self, widget, rectangle):
 		side = self.get_panel_orientation()
 		if self.vertical:
-			size = rectangle[2] -2
+			size = rectangle[2]
 		else:
-			size = rectangle[3] -2
+			size = rectangle[3]
 		if size != self.size:
 			self.resize_image(size)
 
 	def resize_image(self, size):
 		for hImg in self.lImgs:
-			scaled_pixbuf = hImg['pixbuf'].scale_simple(size, size, g.gdk.INTERP_HYPER)
+			scaled_pixbuf = hImg['pixbuf'].scale_simple(size, size, gtk.gdk.INTERP_HYPER)
 			hImg['image'].set_from_pixbuf(scaled_pixbuf)
 		self.size = size
 		
@@ -179,13 +193,23 @@ class Wifi(applet.Applet):
 				self.hbox.add(hImg['image'])
 		if REFRESH.has_changed:
 			self.refresh = REFRESH.int_value
-			g.timeout_remove(self.timeout)
-			self.timeout = g.timeout_add(int(self.refresh)*1000, self.update)
+			gobject.source_remove(self.timeout)
+			self.timeout = gobject.timeout_add(int(self.refresh)*1000, self.update)
 		self.interface = str(INTERFACE.value)
+
+	def run_it(self, command):
+		"""Run the a command."""
+		try:
+			from os import popen
+			popen(command)
+		except:
+			rox.report_exception()
 
 	def button_press(self, window, event):
 		if event.button == 3:
 			menu.popup(self, event, self.position_menu)
-		if event.button == 1:
+		if event.button == 2:
 			self.update()
+		if event.button == 1:
+			self.run_it(COMMAND.value)
 

@@ -1,11 +1,22 @@
 <?xml version="1.0"?>
 <AppInfo>
-  <Summary>WiFi monitor</Summary>
-  <About>
-    <Purpose>Wireless network quality monitor</Purpose>
-    <Version>002</Version>
-    <Author>Cyrille Mars</Author>
-    <License>GNU General Public License</License>
-    <Homepage>http://www.m4rs.org/</Homepage>
-  </About>
+	<Summary>WiFi monitor</Summary>
+	<About>
+		<Purpose>Wireless network quality monitor</Purpose>
+		<Version>002</Version>
+		<Author>Cyrille Mars</Author>
+		<License>GNU General Public License</License>
+		<Homepage>http://www.m4rs.org/</Homepage>
+	</About>
+	<AppMenu>
+		<Item option="--options">
+			<Label xml:lang="en">Options...</Label>
+		</Item>
+		<Item option="--stop">
+			<Label xml:lang="en">Stop Network...</Label>
+		</Item>
+		<Item option="--start">
+			<Label xml:lang="en">Start Network...</Label>
+		</Item>
+	</AppMenu>
 </AppInfo>

@@ -12,5 +12,11 @@
     </menu>
     <entry name="INTERFACE" label="Interface:"/>
     <entry name="REFRESH"   label="Refresh time:"/>
+	<frame label="Commands">
+	    <entry name="COMMAND"   label="Configure:"/>
+    	<entry name="NETSTOP"  label="Stop Net:"/>
+    	<entry name="NETSTART" label="Start Net:"/>
+	</frame>
+
   </section>
 </options>
