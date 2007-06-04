@@ -1,5 +1,9 @@
 WiFi
 ====
+003
+-----
+* Added option to run a command when icon is clicked (e.g. wifi-radar)
+* Clean up gtk-isms
 
 002
 -----
